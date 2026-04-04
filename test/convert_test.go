@@ -125,7 +125,9 @@ func TestConfigMergeNil(t *testing.T) {
 func TestConfigLoadFile(t *testing.T) {
 	dir := t.TempDir()
 	yamlContent := "theme: dark\npage:\n  size: A3\n"
-	os.WriteFile(filepath.Join(dir, "unimd2pdf.yaml"), []byte(yamlContent), 0644)
+	if err := os.WriteFile(filepath.Join(dir, "unimd2pdf.yaml"), []byte(yamlContent), 0644); err != nil {
+		t.Fatal(err)
+	}
 
 	cfg, err := config.LoadFile(dir)
 	if err != nil {

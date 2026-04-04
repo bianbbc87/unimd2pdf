@@ -23,7 +23,9 @@ func (r *ChromeRenderer) Render(htmlContent string, cfg *config.Config) ([]byte,
 		return nil, fmt.Errorf("temp file: %w", err)
 	}
 	defer os.Remove(tmpFile.Name())
-	tmpFile.WriteString(htmlContent)
+	if _, err := tmpFile.WriteString(htmlContent); err != nil {
+		return nil, fmt.Errorf("write html: %w", err)
+	}
 	tmpFile.Close()
 
 	fileURL := "file://" + tmpFile.Name()
@@ -117,6 +119,6 @@ func mmToInch(mm float64) float64 {
 
 func parseFloat(s string) float64 {
 	var f float64
-	fmt.Sscanf(s, "%f", &f)
+	_, _ = fmt.Sscanf(s, "%f", &f)
 	return f
 }

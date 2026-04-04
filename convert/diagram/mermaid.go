@@ -31,7 +31,9 @@ func (m *MermaidRenderer) Render(source string, cfg *config.Config) (string, err
 		return "", err
 	}
 	defer os.Remove(inFile.Name())
-	inFile.WriteString(source)
+	if _, err := inFile.WriteString(source); err != nil {
+		return "", err
+	}
 	inFile.Close()
 
 	outFile := inFile.Name() + ".svg"
