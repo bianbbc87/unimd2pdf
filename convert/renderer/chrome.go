@@ -30,7 +30,14 @@ func (r *ChromeRenderer) Render(htmlContent string, cfg *config.Config) ([]byte,
 
 	fileURL := "file://" + tmpFile.Name()
 
-	ctx, cancel := chromedp.NewContext(context.Background())
+	// --no-sandbox is required in CI/container environments (e.g. GitHub Actions)
+	opts := append(chromedp.DefaultExecAllocatorOptions[:],
+		chromedp.Flag("no-sandbox", true),
+	)
+	allocCtx, allocCancel := chromedp.NewExecAllocator(context.Background(), opts...)
+	defer allocCancel()
+
+	ctx, cancel := chromedp.NewContext(allocCtx)
 	defer cancel()
 
 	ctx, cancel = context.WithTimeout(ctx, 30*time.Second)
