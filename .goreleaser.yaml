@@ -1,0 +1,60 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: unimd2pdf
+    main: ./main.go
+    binary: unimd2pdf
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - id: default
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+
+brews:
+  - name: unimd2pdf
+    repository:
+      owner: bianbbc87
+      name: homebrew-tap
+    homepage: "https://github.com/bianbbc87/unimd2pdf"
+    description: "Universal Markdown to PDF converter"
+    license: "Apache-2.0"
+    install: |
+      bin.install "unimd2pdf"
+    test: |
+      system "#{bin}/unimd2pdf", "--version"
+    dependencies:
+      - name: go
+        type: optional

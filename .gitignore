@@ -1,0 +1,9 @@
+unimd2pdf
+dist/
+*.pdf
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+vendor/
