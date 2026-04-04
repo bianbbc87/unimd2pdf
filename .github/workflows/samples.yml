@@ -3,6 +3,8 @@ name: Generate Sample PDFs
 on:
   push:
     branches: [main]
+    paths:
+      - "samples/**"
   workflow_dispatch:
 
 jobs:
