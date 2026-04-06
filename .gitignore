@@ -1,6 +1,7 @@
 unimd2pdf
 dist/
 *.pdf
+!samples/*.pdf
 .DS_Store
 Thumbs.db
 .idea/

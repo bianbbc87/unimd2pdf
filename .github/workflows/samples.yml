@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -34,22 +37,22 @@ jobs:
 
       - name: Generate sample PDFs
         env:
-          PUPPETEER_CHROMIUM_REVISION: 0
-          CHROME_DEVEL_SANDBOX: ""
+          MMDC_PUPPETEER_CONFIG: /tmp/puppeteer.json
         run: |
           cd samples
           for f in *.md; do
             echo "Converting: $f"
             if [ "$f" = "08-dark-theme.md" ]; then
-              MMDC_PUPPETEER_CONFIG=/tmp/puppeteer.json ../unimd2pdf -i "$f" --theme dark || true
+              ../unimd2pdf -i "$f" --theme dark || true
             else
-              MMDC_PUPPETEER_CONFIG=/tmp/puppeteer.json ../unimd2pdf -i "$f" || true
+              ../unimd2pdf -i "$f" || true
             fi
           done
 
-      - name: Upload sample PDFs
-        uses: actions/upload-artifact@v4
-        with:
-          name: sample-pdfs
-          path: samples/*.pdf
-          retention-days: 90
+      - name: Commit and push PDFs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add samples/*.pdf
+          git diff --staged --quiet || git commit -m "chore: regenerate sample PDFs [skip ci]"
+          git push
