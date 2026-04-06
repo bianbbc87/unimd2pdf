@@ -43,6 +43,10 @@ func (m *MermaidRenderer) Render(source string, cfg *config.Config) (string, err
 	if cfg.Mermaid.Theme != "" {
 		args = append(args, "-t", cfg.Mermaid.Theme)
 	}
+	// Pass puppeteer config for CI environments (--no-sandbox)
+	if puppeteerCfg := os.Getenv("MMDC_PUPPETEER_CONFIG"); puppeteerCfg != "" {
+		args = append(args, "-p", puppeteerCfg)
+	}
 
 	var cmd *exec.Cmd
 	if m.mmdc == "npx:mmdc" {

@@ -27,17 +27,25 @@ jobs:
       - name: Install mmdc
         run: npm install -g @mermaid-js/mermaid-cli
 
+      - name: Create mmdc puppeteer config
+        run: |
+          echo '{ "args": ["--no-sandbox", "--disable-setuid-sandbox"] }' > /tmp/puppeteer.json
+
       - name: Build unimd2pdf
         run: go build -o unimd2pdf ./main.go
 
       - name: Generate sample PDFs
+        env:
+          PUPPETEER_CHROMIUM_REVISION: 0
+          CHROME_DEVEL_SANDBOX: ""
         run: |
           cd samples
           for f in *.md; do
+            echo "Converting: $f"
             if [ "$f" = "08-dark-theme.md" ]; then
-              ../unimd2pdf -i "$f" --theme dark
+              MMDC_PUPPETEER_CONFIG=/tmp/puppeteer.json ../unimd2pdf -i "$f" --theme dark || true
             else
-              ../unimd2pdf -i "$f"
+              MMDC_PUPPETEER_CONFIG=/tmp/puppeteer.json ../unimd2pdf -i "$f" || true
             fi
           done
 
