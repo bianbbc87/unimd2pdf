@@ -50,7 +50,7 @@ brews:
       name: homebrew-tap
     homepage: "https://github.com/bianbbc87/unimd2pdf"
     description: "Universal Markdown to PDF converter"
-    license: "Apache-2.0"
+    license: "MIT"
     install: |
       bin.install "unimd2pdf"
     test: |

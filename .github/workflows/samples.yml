@@ -3,17 +3,28 @@ name: Generate Sample PDFs
 on:
   push:
     branches: [main]
+    paths:
+      - "samples/**"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   generate:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -51,8 +62,8 @@ jobs:
 
       - name: Commit and push PDFs
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "unimd2pdf-bot[bot]"
+          git config user.email "unimd2pdf-bot[bot]@users.noreply.github.com"
           git add samples/*.pdf
           git diff --staged --quiet || git commit -m "chore: regenerate sample PDFs [skip ci]"
           git push
