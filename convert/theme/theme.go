@@ -49,7 +49,7 @@ func (c *Custom) CSS(cfg *config.Config) string {
 		return (&Light{}).CSS(cfg)
 	}
 	// Prepend page/font config, then custom CSS
-	return pageCSS(cfg) + "\n" + string(data)
+	return pageCSS(cfg, "#ffffff") + "\n" + string(data)
 }
 
 type colors struct {
@@ -91,7 +91,7 @@ func darkColors() colors {
 	}
 }
 
-func pageCSS(cfg *config.Config) string {
+func pageCSS(cfg *config.Config, bg string) string {
 	margin := parseMargin(cfg.Page.Margin)
 	size := cfg.Page.Size
 	if cfg.IsLandscape() {
@@ -101,7 +101,8 @@ func pageCSS(cfg *config.Config) string {
 	return fmt.Sprintf(`@page {
   size: %s;
   margin: %s;
-}`, size, margin)
+  background-color: %s;
+}`, size, margin, bg)
 }
 
 func baseCSS(cfg *config.Config, c colors) string {
@@ -210,7 +211,7 @@ strong { font-weight: 600; }
 
 .mermaid-diagram { text-align: center; margin: 1em 0; }
 .mermaid-diagram svg { max-width: 100%%; height: auto; }`,
-		pageCSS(cfg),
+		pageCSS(cfg, c.bg),
 		cfg.Font.Family, cfg.Font.Size,
 		c.fg, c.bg,
 		c.h1Border,

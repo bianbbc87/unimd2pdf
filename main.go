@@ -85,6 +85,11 @@ func main() {
 	cfg.Output = *output
 	cfg.BaseDir = inputDir
 
+	// Auto-select dark highlight style when theme is dark and user didn't override
+	if cfg.Theme == "dark" && cfg.Code.HighlightStyle == "github" {
+		cfg.Code.HighlightStyle = "monokai"
+	}
+
 	// --- Read ---
 	mdBytes, err := os.ReadFile(cfg.Input)
 	if err != nil {
