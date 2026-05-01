@@ -56,6 +56,3 @@ brews:
       bin.install "unimd2pdf"
     test: |
       system "#{bin}/unimd2pdf", "--version"
-    dependencies:
-      - name: go
-        type: optional
