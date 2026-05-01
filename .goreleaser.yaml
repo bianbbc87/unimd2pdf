@@ -48,6 +48,7 @@ brews:
     repository:
       owner: bianbbc87
       name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     homepage: "https://github.com/bianbbc87/unimd2pdf"
     description: "Universal Markdown to PDF converter"
     license: "MIT"
