@@ -8,3 +8,6 @@ Thumbs.db
 .vscode/
 *.swp
 vendor/
+coverage.out
+
+.claude/
