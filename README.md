@@ -35,8 +35,10 @@ Layer 2 packages never import each other. See [docs/architecture.md](docs/archit
 
 ### Install
 
+macOS:
+
 ```bash
-brew install bianbbc87/tap/unimd2pdf
+brew install --cask bianbbc87/tap/unimd2pdf
 ```
 
 Or with Go:
